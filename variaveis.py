@@ -1,0 +1,1 @@
+# O arquivo de variáveis.
