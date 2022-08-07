@@ -1,55 +1,10 @@
 # O arquivo com as classes, se ficar grande vou dividir.
-from re import X
-import sys
 import pygame as pg
 
 from variaveis import *
 
 
 pg.init()
-
-
-
-class Controladora:
-    def __init__(self):
-        self.janela()
-        self.grupo = pg.sprite.Group()
-        self.botoes()
-        self.nome_jogo()
-        self.loop()
-        
-    def janela(self):
-        self.tela = pg.display.set_mode((LARGURA, ALTURA))
-        pg.display.set_caption('Jogo da Velha')
-        icon = pg.image.load('imagens/icone.png')
-        pg.display.set_icon(icon)
-    
-    def nome_jogo(self):
-        nome = Rotulo('Jogo da Velha', 10)
-        self.grupo.add(nome)
-    
-    def botoes(self):
-        seguir = Seguir()
-        b1 = Botoes(TAM, POS, 5, COR, 'Jogar', NUM, seguir)
-        b2 = Botoes(TAM, POS, 4, COR, 'Como Jogar', NUM, seguir)
-        b3 = Botoes(TAM, POS, 3, COR, 'Configurações', NUM, seguir)
-        b4 = Botoes(TAM, POS, 2, COR, 'Créditos', NUM, seguir)
-        self.grupo.add(b1)
-        self.grupo.add(seguir)
-    
-    def loop(self):
-        continuar = True
-        while continuar:
-            for event in pg.event.get():
-                if event.type == pg.QUIT:
-                    continuar = False
-                    pg.quit()
-                    sys.exit()
-                
-                self.tela.fill(CINZA)
-                self.grupo.draw(self.tela)
-                self.grupo.update()
-                pg.display.update()
 
 
 
@@ -61,9 +16,9 @@ class Botoes(pg.sprite.Sprite):
         self.image.fill(self.cor[1])
         self.rect = self.image.get_rect()
         self.rect.left = pos[0]
-        self.rect.top = int(pos[1]/num)
+        self.rect.top = int((pos[1]/10)*num)
         
-        self.fonte = pg.font.SysFont('Times New Roma', letra)
+        self.fonte = pg.font.SysFont('Times New Roma', letra)  #FontError
         self.texto = self.fonte.render(texto, True, self.cor[0])
         self.l = (tam[0] - self.texto.get_width())/2
         self.h = (tam[1] - self.texto.get_height())/2
@@ -96,16 +51,13 @@ class Seguir(pg.sprite.Sprite):
         
 
 class Rotulo(pg.sprite.Sprite):
-    def __init__(self, texto, nun):
+    def __init__(self, texto, nun, letra=60):
         pg.sprite.Sprite.__init__(self)
-        fonte = pg.font.SysFont('Times New Roma', 60)
+        fonte = pg.font.SysFont('Times New Roma', letra)
         self.image = fonte.render(texto, True, BRANCO)
         self.rect = self.image.get_rect()
         l = (LARGURA - self.image.get_width())/2
-        h = 640/nun
-        print(self.image.get_height())
+        h = (ALTURA/10)*nun
         self.rect.left = l
         self.rect.top = h
 
-
-Controladora()
