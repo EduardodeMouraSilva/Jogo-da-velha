@@ -1,4 +1,6 @@
 # O arquivo com as classes, se ficar grande vou dividir.
+from abc import ABC, abstractmethod
+from pathlib import Path
 import pygame as pg
 
 from variaveis import *
@@ -51,13 +53,73 @@ class Seguir(pg.sprite.Sprite):
         
 
 class Rotulo(pg.sprite.Sprite):
-    def __init__(self, texto, nun, letra=60):
+    def __init__(self, texto, nun, quadro, letra=60):
         pg.sprite.Sprite.__init__(self)
         fonte = pg.font.SysFont('Times New Roma', letra)
         self.image = fonte.render(texto, True, BRANCO)
         self.rect = self.image.get_rect()
-        l = (LARGURA - self.image.get_width())/2
-        h = (ALTURA/10)*nun
+        l = (quadro[0] - self.image.get_width())/2
+        h = (quadro[1]/10)*nun
         self.rect.left = l
         self.rect.top = h
+
+
+
+class Janela(ABC):
+    @abstractmethod
+    def __init__(self):
+        pass
+    
+    @abstractmethod
+    def janela(self):
+        pass
+
+    @abstractmethod
+    def nome(self):
+        pass
+
+    @abstractmethod
+    def opcoes(self):
+        pass
+
+    @abstractmethod
+    def botoes(self):
+        pass
+
+    @abstractmethod
+    def loop(self):
+        pass
+
+
+
+class ManiArq:
+    def __init__(self, arquivo):
+        self.arquivo = self._conferir(arquivo)
+        if not self._conferir_arquivo(self.arquivo):
+            self._criar(self.arquivo)
+
+    def _criar(self, nome):
+        with open(nome, 'w') as arq:
+            pass
+    
+    def escrever(self, escrevi):
+        with open(self.arquivo, 'w') as arq:
+            arq.write(f'{escrevi} \n')
+
+    def ler(self):
+        with open(self.arquivo, 'r') as arq:
+            linha = arq.readline()
+            linha = linha.replace('\n', '')
+        return linha
+    
+    def _conferir(self, nome):
+        if not '.txt' in nome:
+            nome = nome + '.txt'
+        return nome
+    
+    def _conferir_arquivo(self, nome):
+        arquivo = Path(nome)
+        if arquivo.is_file():
+            return True
+    
 
